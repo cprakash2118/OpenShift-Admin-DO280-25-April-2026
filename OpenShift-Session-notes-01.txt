@@ -1,0 +1,87 @@
+https://github.com/cprakash2118/OpenShift-Admin-DO280-25-April-2026
+
+https://reprint.forrester.com/reports/the-forrester-wavetm-multicloud-container-platforms-q3-2025-f3367e46/index.html
+
+CUDO - https://docs.redhat.com/en/documentation/openshift_container_platform/4.18
+
+###POint-01:-
+Technology - Multicloud Container Platforms
+Product    - Red Hat OpenShift 
+Training Module - DO280 (DO180) -> EX280
+
+1) Cloud services editions (Public Cloud)
+ - Red Hat OpenShift Service on AWS           [Cloud-Platforms=AWS;POintOfConnect=AWS;ROSA]
+ - Microsoft Azure Red Hat OpenShift          [Cloud-Platforms=Azure;POintOfConnect=MS-Azure;ARO]
+ - Red Hat OpenShift Dedicated                [Cloud-Platforms=GCP/AWS;POintOfConnect=RedHat]
+ - Red Hat OpenShift on IBM Cloud             [Cloud-Platforms=IBM-Cloud;POintOfConnect=IBM]
+ 
+2) Self-managed editions
+ - Red Hat OpenShift Kubernetes Engine        [basic;RHOKE]
+ - Red Hat OpenShift Container Platform       [Standard;RHOCP]    
+ - Red Hat OpenShift Platform Plus            [Add-Ons; RHOPP]
+ - Red Hat OpenShift Virtualization Engine    [Add-Ons; RHOVE]
+ 
+3-) Service & Add-ons:-
+ - Red Hat OpenShift AI                           [RHOAI]       
+ - Red Hat OpenShift Lightspeed       
+ - Red Hat OpenShift Virtualization               [RHOVE]
+ - Red Hat Quay 
+ - Red Hat Advanced Cluster Management for Kubernetes  [RHACM] 
+ - Red Hat Advanced Cluster Security for Kubernetes    [RHACS]
+ - Red Hat Advanced Developer Suite
+ - Red Hat OpenShift Consulting
+
+https://www.redhat.com/en/resources/openshift-skill-paths-datasheet
+
+https://training.hawkstack.com/redhat/openshift-skill-path
+ 
+Note: 
+- Red Hat OpenShift Anywhere 
+- Single Platform for microService, Lagecy application (Required VM- KubeVirt), AI/ML.
+- Without k8s, OpenShift is not possible.
+- k8s (Kubernetes) managed by CNCF.
+- Most of the CNCF Graduated Projects present in OCP.
+https://www.cncf.io/projects/
+https://www.cncf.io/training/certification/software-conformance/
+
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+https://www.cncf.io/projects/kubernetes/
+https://github.com/cprakash2118/kubernetes-projects
+https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+
+
+## Kubernetes Vs OpenShift:-
+           Kubernetes (k8s)
+
+Layer-06   -> End user application [Banking; etc ]
+Layer-05   -> Add-ons kubernetes [Auth; Logging; monitoring etc]
+Layer-04   -> Certified Kubernetes deployment (k8sv1.36)
+               [kubelet;kube-apiserver;kube-controller-manager;kube-scheduler;etcd]
+Layer-03   -> Install "Container Run Time" - Containerd,cri-o,Docker,MCR -> Cri-O 
+              FYI- crio as "Container Run Time" 
+Layer-02   -> Install OS - RHEL/CentOS/SUSE (RHEL9)
+Layer-01   -> Bare metal (Physicla node) / Virtual Machine / Cloud Instances 
+
+          OpenShift (OCP cluster)
+		 
+Layer-08   -> End User application (Banking etc)
+Layer-07   -> Red Hat OpenShift Platform Plus (RHOPP)
+Layer-06   -> Red Hat OpenShift Container Platform (RHOCP)
+Layer-05   -> Red Hat OpenShift Kubernetes Engine (RHOKE)		 
+Layer-04   -> Certified Kubernetes deployment (k8sv1.36)
+              [kubelet;kube-apiserver;kube-controller-manager;kube-scheduler;etcd]
+Layer-03   -> Container Run Time - CRIO
+Layer-02   -> Install OS - RHEL coreOS (RHCOS)		 
+Layer-01   -> Bare metal (Physicla node) / Virtual Machine / Cloud Instances
+
+
+openshift-install (installer)
+pullSecret (from images download)
+openshift-client (oc)
+Red Hat Enterprise CoreOS image 
+install-config.yaml 
+
+
+#Point-02-# Classroon environment (Relate this with your product)
+
+

@@ -1,0 +1,198 @@
+Quick Recap (5 mins):-
+
+POint-01-#
+- Product - Red Hat OpenShift 
+  1-) Cloud [ROSA;ARO;Dedicated;IBM]
+  2-) Self  [RHOKE; RHOCP; RHOPP; RHOVE ]
+  3-) Service & Add-ons [RHOAI;OVE;ACM;ACS etc]
+ 
+- Kubernetes Vs OpenShift:-
+
+Kubernetes (k8s)
+Layer-06   -> End user application [Banking; etc ]
+Layer-05   -> Add-ons kubernetes [Auth; Logging; monitoring etc]
+Layer-04   -> Certified Kubernetes deployment (k8sv1.36)
+               [kubelet;kube-apiserver;kube-controller-manager;kube-scheduler;etcd]
+Layer-03   -> Install "Container Run Time" - Containerd,cri-o,Docker,MCR -> Cri-O 
+              FYI- crio as "Container Run Time" 
+Layer-02   -> Install OS - RHEL/CentOS/SUSE (RHEL9)
+Layer-01   -> Bare metal (Physicla node) / Virtual Machine / Cloud Instances 
+
+
+OpenShift (OCP cluster)		 
+Layer-08   -> End User application (Banking etc)
+Layer-07   -> Red Hat OpenShift Platform Plus (RHOPP)
+Layer-06   -> Red Hat OpenShift Container Platform (RHOCP)
+Layer-05   -> Red Hat OpenShift Kubernetes Engine (RHOKE)		 
+Layer-04   -> Certified Kubernetes deployment (k8sv1.36)
+              [kubelet;kube-apiserver;kube-controller-manager;kube-scheduler;etcd]
+Layer-03   -> Container Run Time - CRIO
+Layer-02   -> Install OS - RHEL coreOS (RHCOS)		 
+Layer-01   -> Bare metal (Physicla node) / Virtual Machine / Cloud Instances
+
+----------------------------------------------------------------------------------------
+POint-02-# Classroom environment (Consider your product env).
+Prod env:- OCP cluster 
+ - 3 master nodes  (Master node alway follow old no)
+ - N worker nodes (Based on the workload)
+ FYI- 3 master can handle almost 2k worker nodes (w.r.t OCPv4.6 - current version 4.21).
+ 
+ Master nodes -> K8s/OCP services 
+ Worker nodes -> End users application (Banking etc)
+ 
+FYI- Master node also can be worker nodes (But not good for prod).
+
+OCP cluster:-
+master node -> control plane 
+worker node -> compute node 
+
+As per DO280 LAB:-
+1-) Users details:-
+    Login to VMs/Server:-
+	- student/student [sudo access to all nodes]
+	- root/redhat   
+	
+	Login to OCP cluster:-
+	- admin/redhatocp         ["cluster-admin" access - this access same as root access w.r.t Linux]
+	- developer/developer     [basic user access]
+	
+	- kubeadmin account - default cluster-admin account (tmp account)
+	  FYI- This is the auto generated account at the time of OCP cluster installation.
+	
+	*********************
+	- From workstation login to "utility" node as root.
+	  $ ssh root@utility 
+	  # cd /home/lab/ocp4/auth 
+	  # ls
+	  kubeconfig kubeadmin-password 
+	  # cat kubeconfig | grep serevr 
+	  https://api.ocp4.example.com:6443 
+	  
+	  # cat kubeadmin-password ; echo 
+	  lakjdkasjdlkajlkj123
+	  # pwd
+	  /home/lab/ocp4/auth
+	  # scp -r kube* student@workstation:~/
+	  password: student 
+	  
+	  # oc login -u kubeadmin -p lakjdkasjdlkajlkj123 https://api.ocp4.example.com:6443 
+	  # oc whoami 
+	  # oc version 
+	  # oc get nodes 
+	  # oc get clusterversion 
+	  # exit 
+	  $ oc login -u kubeadmin -p lakjdkasjdlkajlkj123 https://api.ocp4.example.com:6443
+	  
+	  Using "oc" - openshift-client communicate with OCP cluster via API.
+	  
+	  $ oc whoami 
+	  kube:admin 
+	  $ oc logout 
+	  $ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+	  $ oc whoami 
+	  admin 
+	  $ oc whoami --show-console 
+	  https://console-openshift-console.apps.ocp4.example.com 
+	  
+	  Use this web console to login to OCP cluster using same admin/redhatocp 
+
+     Login to OCP cluster, what you required ?
+	 1-# Token Based authentication:-
+        - username/passowrd 
+	    - API URL via CLI login using "oc"
+	    - Web URL (Console) login using same account.
+		
+	 2-# Certificate based authentication:-
+	    Using "kubeconfig" - Backdoor entry then "OAuth" service not working.
+		FYI- OAuth sync with IdP (Identity Provider) like htpasswd, LDAP, LDAP Group Sync, OIDC 
+	 
+	    1-) oc whoami --kubeconfig /home/student/kubeconfig 
+		2-) export KUBECONFIG=/home/student/kubeconfig
+		    env | grep KUBECONFIG
+			unset KUBECONFIG
+	    3-) cp -rv /home/student/kubeconfig /home/student/.kube/config
+	    FYI- NOt using token, this is called Certificated based authentication.
+	 
+	 
+	 BaseDomain  - citi.com 
+	 CLuster 1st - apac 
+	 Cluster 2nd - na 
+	 
+	 
+	 apac cluster:-
+	 baseDomain:- citi.com 
+	 admin/redhatocp 
+	 API URL - 
+	   - https://api.clusterName.baseDomain:6443 
+	   - https://api.apac.citi.com:6443 
+     Web URL - 
+       - https://appName-nsName.apps.clusterName.baseDomain
+	   - https://console-openshift-console.apps.apac.citi.com 
+	   
+	   
+	 na cluster:-
+	 baseDomain: citi.com
+	 admin/redhatocp 
+	 API URL - 
+	   - https://api.clusterName.baseDomain:6443 
+	   - https://api.na.citi.com:6443 
+     Web URL - 
+       - https://appName-nsName.apps.clusterName.baseDomain
+	   - https://console-openshift-console.apps.na.citi.com 
+
+	 ocp4 cluster:-
+	 baseDomain:- example.com
+	 admin/redhatocp 
+	 API URL - 
+	   - https://api.clusterName.baseDomain:6443 
+	   - https://api.ocp4.example.com:6443 
+     Web URL - 
+       - https://appName-nsName.apps.clusterName.baseDomain
+	   - https://console-openshift-console.apps.ocp4.example.com 
+	*********************
+   kubeconfig-cluster-admin-apac 
+   kubeconfig-auditor-apac (cluster-reader access for 24 hours only)
+--------------------------------------------------------------------------------------
+
+- Product - Red Hat OpenShift 
+- Classroom environment (relate with real prod)
+  1-) Users details 
+      Login to VMs/Servers
+	  Login to OCP cluster 
+	   - Token Based 
+	   - Certificate Based 
+
+
+  2-) Network/Domain:-
+      
+	  Network Name                       Domain Name                    Networ Range (CIDR).
+	1- classroom network                example.com                     172.25.252.0/24 
+	   FYI
+	   - It allow to connect with internal (registry.redhat.io;quay.io; github.com etc)
+	   - Connect with public registry and repository (code repo).
+	
+	2- student Network (Accenture)      lab.example.com                 172.25.250/0/24 
+	
+	3- Cluster Network (citi infra)     ocp4.example.com                192.168.50.0/24 
+	
+  3-) Servers/VMs details:-
+     workstation.lab.example.com    Jump Server (Using to login to OCP cluster; lab setup deployment)
+	 bastion.lab.example.com        DNS/Act as router which connect Student n/w to Classroon Network)
+	 classroom.example.com          It act as proxy server (connect internet for quay.io/github.com etc)
+	 utility.lab.example.com       DNS/DHCP/PXE/HAproxy/Apache etc; It connect stduent n/w to cluster n/w.
+	 master01.ocp4.example.com     Master node ; also act as worker node 
+	 registry.ocp4.example.com     registry for image & also git.ocp4.example.com for core repo.
+	 idm.ocp4.example.com          LDAP server.
+	 FYI
+	 - admin & developer users from LAP account.
+	 - OAuth already integrated with LDAP (Token exchanges for authentication and authorization).
+       IdP (Identity Provider) - htpasswd (local) and LDAP 	 
+	   
+	   oc login -u admin -p redhat https://api.ocp4.example.com:6443 
+	   
+	   api.ocp4.example.com:6443  -> 192.168.50.254 (listin on 6443 port) 
+	    
+	   then it route to master01 node w.r.t 6443 port 
+	   master to kube-apiserver 
+	 
+------------------------------------------------------------------
