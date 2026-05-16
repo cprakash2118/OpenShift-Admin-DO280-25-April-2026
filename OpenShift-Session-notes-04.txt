@@ -1,0 +1,118 @@
+# Quick Recap - 5 mins 
+POint-1-# Product 
+# Red Hat OpenShift 
+ - CLoud [ROSA-AWS;ARO-Azure;Deddicated-GCP/AWS;IBM-Cloud]
+ - Self Managed [RHOKE; RHOCP; RHOPP; RHOVE ]
+ 
+FYI- LAB (DO280) using RHOKE/OCP single-node (SNO) cluster
+
+POint-2-#
+# Classroom Env (Considered Prod Setup)
+ - Login details:-
+   - Login to VMs/Servers.
+     student/student [sudo access]
+     root/redhat 
+
+   - Login to OCP cluster.
+     admin/redhatocp      [ cluster-admin]
+	 developer/developer  [ basic-user]
+
+   - API URL 
+     - https://api.clusterName.baseDomain:6443 
+	 - https://api.ocp4.example.com:6443 
+	 
+	 $ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443 
+	 
+   - Web URL 
+     - https://appName-nsName.apps.clusterName.baseDomain
+	 - https://console-openshift-console.apps.ocp4.example.com  (Web browser)
+
+ - Network/Domain details:-
+    Network Name                    Domain Name                  IP Range
+	classroom Network               example.com                  172.25.252.0/24 
+	Student Network                 lab.example.com              172.25.250.0/24 
+	Cluster Network                 ocp4.example.com             192.168.50.0/24 
+
+
+ - Servers/VMs details:-
+   1-) workstation.lab.example.com       - jump server (Login to this node for connecting to OCP cluster).
+   2-) utility.lab.example.com           - Main servers [HAproxy;DHCP;NFS-Server;Apache;PXE etc]
+   3-) bastion.lab.example.com           - DNS, It connect student network to classroom network (Internet connectivity)
+   4-) master01.ocp4.example.com         - master nodes (master/worker both).
+   5-) classroom.example.com             - Proxy server - used for internet connectivity (github.com/quay.io etc)
+   6-) idm.ocp4.example.com              - LDAP server (admin/developer belongs to this).
+   7-) resgiter.ocp4.example.com         - Image (registry) & repositoty (code)
+       or git.lab.example.com            - yaml file.
+	   
+   
+Point-3-#    
+# Login to ROL (Red Hat Online Learning).
+  https://rol.redhat.com 
+  userID/Password 
+  
+  - Access your lab.
+  - Start your lab.
+  - Access your workstation (Open Console)
+  - Open terminal then ssh to utility as lab user.
+    $ ssh lab@utility 
+	$ ./sigh.sh ; ./wait.sh   [Sign the missed certificate during the start; wait.sh - making sure env is ready]
+	Note: Wait for setup to be ready.
+
+
+TOC for DO280v418.
+
+Point-4-#
+Phase-01 -> Unit3/1/2 
+Phase-02 -> Unit4,5
+Phase-04 -> Unit6/7/8 [Self service - Quota/LimitRange/template],OLM (cluster/other) ; Cronjobs, SCC]
+Phase-05 -> OpenShift Update (Patch Management).
+
+
+Unit-1-) Declarative Resource Management 	
+       - Resource Manifest (Express k8s/ocp in yaml format).
+	   - Kustomization/Overlay 
+       FYI
+	   - More focus on manifest level.	   
+       - Imperative Workflows - Command level (oc ; oc --help 
+       - Declarative Workflows (Resource Manifest)
+
+Unit-2-) Deploy packaged application.
+       - OpenShift Template 
+	   - OpenShift Helm chart
+
+
+Unit-3-) Authentication and Authorization
+       - Authenication using OAuth via IdPs.
+	   - Authorization using IdPs - htpasswd (Other options LDAP;LDAP gorupSync ; OIDC).
+	   
+******************************************************************************************************
+Unit-3-# Authentication & Authorization
+       - Configure Identity Providers (IdPs).
+	   
+	   - What is Identity Provider (IdP)?
+	     - While login to OCP cluster (Token based) IdP verify access (Authenication access).
+           $ oc login -u user -p password APU-URL 
+           Example:-
+           $ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443  
+		   
+	   - IdP alway define in OAuth service (OAuth is an built-in function w.r.t OCP).
+	   - OAuth is an identity Broker 
+	     $ oc get oauth cluster 
+		 $ oc get oauth cluster -o yaml
+		 
+		 FYI
+		 - Whenever login to OCP cluster (Token based), user always be part of some namespace (project)
+		 - By default it's "default" namespace.
+		 
+		user1-5/redhat -> secretName=secret-name-new-team  IdP Name= IdP-htpasswd-type-NEW-Team
+		
+		- Secret for IdP must be on "openshift-config" namespace only.
+		
+Step-1-# Create DB (via htpasswd)
+Step-2-# UPload to OCP cluster as secret w.r.t "openshift-config" namespace.
+Step-3-# Update to Oauth (oc get oauth cluster -o yaml > oauth.yaml)
+         Vim oauth.yaml 
+Step-4-# Apply new changes (oc apply -f oauth.yaml)
+Step-5-# Verify (oc get pods -n openshift-authentication) - 
+         FYI- If taking more time - just validate your previous work if all fine then rollout 
+		$ oc rollout restart deployment oauth-openshift -n openshift-authentication

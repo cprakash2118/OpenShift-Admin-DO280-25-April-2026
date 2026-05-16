@@ -1,0 +1,166 @@
+Quick Recap (10 mins):-
+POint-01-# Product (Red Hat OpenShift - RHOKE; RHOCP; RHOPP ; Using RHOKE).
+POint-02-# Classroom Environment (Relate with Prod setup).
+
+Prod Setup for OCP cluster:-
+- 3 master nodes - Run cluster service/application w.r.t k8s/ocp.
+- N worker nodes [ worker nodes later convert to storage/infra/custom etc] - End user applications.
+- Login to OCP cluster.
+  - OAuth service used for "Authentication & Authorization" - Identity Broker.
+    FYI- OAuthv2.0 - On behalf of OpenShift it communicate with other IdP (Identity Providers).
+	
+  - Authentication methods:-
+    1-) TOken Based auth [OAuth Based authentication]
+	    FYI
+		- Authentication always done by IdP, the IdP exchange the token with OAuth.
+		- OAuth involve with RBAC - OAuth provides the authorization.
+		
+    2-) Certificate Based auth  (Backdoor & auditor level - It bypass OAuth) 	
+	
+	
+  - Identity Providers:-
+    - htpasswd (Local IdP) 
+	- LDAP & LDAP Group Sync 
+	- AD - Active Directory 
+	- OpenIDConnect (OIDC) - AWS IAM, RHSSO, PingIdentity etc 
+	
+LDAP Setup for OCP cluster:-
+- workstation.lab.example.com (Using Web COnsole or CLI via "oc").
+- utility.lab.example.com     (HAProxy,Apache, NFS-Server for StorageClass, PXE, DHCP etc)
+- bastion.lab.example.com     (DNS)
+- idm.ocp4.example.com        (LDAP server - admin & developer users belongs to LDAP)
+- registry.ocp4.example.com   (Images)
+- git.ocp4.example.com        (Code repo)
+- master01.ocp4.example.com   (all-in-one-machine)
+
+$ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443 
+  FYI- admin -> LDAP User and having full access (cluster-admin access).
+
+$ ssh lab@utility 
+$ cd /home/lab/ocp4/auth 
+$ pwd ; ls 
+/home/lab/ocp4/auth
+kubeconfig kubeadmin-password 
+
+$ scp -r kube* student@workstation:~/
+Password for student: student 
+$ exit 
+
+
+$ oc get nodes --kubeconfig /home/student/kubeconfig
+
+$ env | grep KUBECONFIG
+$ export KUBECONFIG=/home/student/kubeconfig
+$ env | grep KUBECONFIG
+$ oc whoami ---show-console 
+$ oc get nodes 
+$ unset KUBECONFIG
+$ env| grep KUBECONFIG
+no output.
+------------------------------------------------------------------------------------------------------------
+02-May-2026:-
+
+Unit-3rd for your reference.
+
+OUtcome - Create own custom users/groups and authenticate to OCP cluster.
+Task-01-# Under OCP cluster 
+Task-02-# More discussion w.r.t OAuth.
+Task-03-# Setup own users/groups using OAuth & IdP.
+Task-04-# Login to OCP cluster with new users.
+
+
+What is OCP cluster:-
+Prod -> master + worker nodes [3 master nodes & N worker nodes]
+LAB  -> Master + worker nodes [1 node OCP cluster - master node also act as worker - all-in-one-node]
+        Dual role - master01 -> [ master, worker ] 
+
+Deploy applications/operators - Belongs to system (services).
+  - one pod/container -> belongs to master01
+  - If 3 node cluster (3 master nodes).
+  - Three pods/containers -> belongs to master01-03 
+  
+    OAuth (service) -> Running 
+	oauth-pod01 -> master01 
+	oauth-pod02 -> master02 
+	oauth-pod03 -> master03 
+	
+	FYI- 
+	- Each services w.r.t OpenShift also associated with respective operator.
+	- Operator (w.r.t k8s/ocp operator) is also an application which invoke k8s/ocp API to manage k8s/ocp resources like (Oauth PODS,Deployment,etc).
+	- All applications/services belongs to specific "namespace".
+	
+	$ oc get pods -n openshift-authentication
+	  Outcome -> Display all OAuth service running here w.r.t namespace="openshift-authentication"
+	
+    $ oc get pods -n openshift-authentication-operator 
+
+- Where to do the changes w.r.t Authentication (htpasswd, LDAP, AD, OIDC etc).
+  $ oc get oauth /cluster 
+  $ oc get oauth /cluster -o yaml 
+  $ oc get oauth /cluster -o yaml > my-oauth.yaml
+  $ vim my-oauth.yaml 
+  $ oc apply/replace -f my-oauth.yaml   (This type of changes called "declarative method").
+  $ oc get pods -n openshift-authentication 
+    Note: pods should restart if any changes.
+  
+  
+- This changes read by oauth-operator running w.r.t openshift-authentication-operator namespace.
+- oauth-operator restart the oauth-pod01/02/03 in rolling update.
+
+***************************************
+### step-01:- Create htpasswd (user database)
+user1-10/redhat using htpasswd (IdP).
+
+$ htpasswd --help  
+$ htpasswd -c -b -B htpasswd-file-name user1 redhat 
+$ htpasswd    -b -B htpasswd-file-name user2 redhat
+..
+..
+$ htpasswd    -b -B htpasswd-file-name user10 redhat  
+$ cat htpasswd-file-name
+
+
+### Step-02:- Create secret.
+$ oc create secret generic htpasswd-secret-01 --from-file htpasswd=htpasswd-secret-01 -n openshift-config 
+$ oc get secret htpasswd-secret-01 -n openshift-config
+$ oc get secret htpasswd-secret-01 -n openshift-config -o yaml 
+
+
+### Step-03:- Update secret to Oauth.
+Now changes to Oauth file 
+$ oc get oauth cluster 
+$ oc get oauth cluster -o yaml > oauth.yaml 
+$ vim oauth.yaml 
+https://docs.redhat.com/en/documentation/openshift_container_platform/4.18
+https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization
+
+spec:
+  identityProviders:
+  - name: IdP-htpasswd-SRE-Team 
+    mappingMethod: claim  
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpasswd-secret-01     #Secret resource# 
+
+$ oc get pods -n openshift-authentication
+- Restarted all pods w.r.t namespace=openshift-authentication
+
+******************
+verify the user11-30/redhat 
+
+Case-01:-
+- user9  -> Left the org/project 
+- user51 -> add to SRE-Team
+- user9 -> SRE-Team and moved to MYapp 
+
+- admin/red -> added to SRE-Team
+  NOte:- admin/redhatocp already user with "cluster-admin" access - It's LDAP user.
+
+
+user51 -> SRE 
+user9 -> MYapp 
+
+
+
+
