@@ -1,0 +1,5 @@
+Task-01-# Create users as per below conditions.
+
+user101-110/redhat123 ; secretName=secret-sre-team  ; IdP Name= IdP-htpasswd-SRE-Team
+user111-120/redhat456 ; secretName=secret-devops-team  ; IdP Name= IdP-htpasswd-DevOps-Team
+user121-130/redhat789 ; secretName=secret-myapp-team  ; IdP Name= IdP-htpasswd-Myapp-Team
