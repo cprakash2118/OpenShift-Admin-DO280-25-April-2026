@@ -1,0 +1,22 @@
+----------
+ssh from workstation to utility as lab user.
+$ ssh lab@utility 
+$ ./sign.sh ; ./wait.sh 
+
+Task-01-# 
+SRE-Team :- user1-5/redhat123 ; SecretName=secret-sre ; IdP Name= IdP-htpasswd-SRE-Team
+SRE-Team :- user6-10/redhat123 ; SecretName=secret-devops ; IdP Name= IdP-htpasswd-DevOps-Team
+SRE-Team :- user11-20/redhat123 ; SecretName=secret-myapp ; IdP Name= IdP-htpasswd-Myapp-Team
+
+Note: Login with all user and verify.
+
+Task-02:-
+  - delete user4 and add user21 to SRE team
+  - delete user3 and add user3 to DevOps Team 
+  - user22 added to both SRE and DevOps 
+  - Update the user1,user6,user11-15 password as "redhat-new-password"
+  - Change the IdP of Myapp-Team [Old IdP = "IdP-htpasswd-Myapp-Team" and New IdP = "IdP-htpasswd-Myapp-Team-New"]
+    
+	Note: Login to all users (user1 to 22 users)
+	
+	user21-22/redhat-password

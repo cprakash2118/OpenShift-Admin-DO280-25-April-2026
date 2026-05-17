@@ -1,0 +1,50 @@
+#Quick Recap:-
+
+Authentication via Identity Provider [IdP]
+List of IdPs:-
+ - htpasswd (type: HTPasswd)
+ - LDAP     (type: LDAP)
+ - OIDC 
+   - Git Enterprise 
+   - PIng Identity 
+   - RHSSO 
+Database - User's information (userName, Password, PinCode, Email)
+
+----------------------------
+Two methods:-
+1-) Token based auth (via OAuth ; OAuth do token exchange between IdPs.
+2-) Certificate based authentication (via x509) - Backdoor/audit part (via kubeconfig file).
+
+Flow for Authentication via OAuth.
+- OAuth (oc get pods -n openshift-authentication ; oc get pods -n openshift-authentication-operator)
+  FYI- If you have 3 master nodes - then "OAuth" must be on all three nodes, but respective opeartor must be on one node.
+
+- OpenShift-apiserver (Proxy Server).
+  oc get pods -n openshift-apiserver  
+  oc get pods -n openshift-apiserver-operator
+  
+- OpenShift-kube-apiserver (Main authentication authority)
+  oc get pods -n openshift-kube-apiserver  
+  oc get pods -n openshift-kube-apiserver-operator
+
+- ETCD; kube-controller-manager 
+
+OAuth authentication always privides token. 
+Token = user + password 
+
+
+user part of multiple IdPs (htpasswd, LDAP, OpenIDConnect etc )
+======================================================================
+Concepts:-
+- htpasswd (used for create local database for user's details)
+- Create secret (type generic - --from-file), auth related w.r.t "openshift-config"
+- UPdate oauth (oc get oauth/cluster -o yaml )
+- Operations like extract/update secret.
+  oc get users (entry)
+  oc get identity (entry)
+
+- Token Based - IdP=htpasswd  (Oauth)
+- Certificate based - x509 (via kubeconfig)
+
+
+	
