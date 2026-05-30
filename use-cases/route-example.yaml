@@ -1,0 +1,17 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: database
+    template: postgresql-ephemeral-template
+  name: database
+spec:
+  host: cp.apps.ocp4.example.com
+  port:
+    targetPort: postgresql
+  to:
+    kind: ""
+    name: database
+    weight: null
+status: {}

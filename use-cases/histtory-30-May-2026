@@ -1,0 +1,565 @@
+    1  exit
+    2  exit
+    3  exit
+    4  exit
+    5  exit
+    6  exit
+    7   lab start auth-providers
+    8  oc get oauth -o yaml 
+    9  cd DO280/labs/auth-providers/
+   10  pwd
+   11  ll
+   12  htpasswd -c B -b htpasswd new_admin redhat
+   13  htpasswd -c -B -b htpasswd new_admin redhat
+   14  ll
+   15  cat htpasswd 
+   16  ll
+   17  cat htpasswd 
+   18  htpasswd -B -b htpasswd new_developer developer 
+   19  ll
+   20  cat htpasswd 
+   21  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443 
+   22  oc whoami 
+   23  oc get nodes
+   24  oc version 
+   25  oc get secret 
+   26  oc project -q
+   27  oc get secret -n openshift-config 
+   28  oc create secret generic --from-file name=htpasswd 
+   29  oc create secret generic secret-test --from-file name=htpasswd 
+   30  oc get secret 
+   31  oc get secret secret-test 
+   32  oc get secret secret-test -o yaml 
+   33  oc create secret generic secret-test --from-file your-name=htpasswd 
+   34  oc create secret generic secret-test02 --from-file your-name=htpasswd 
+   35  oc get secret 
+   36  oc get secret secret-test02 -o yaml 
+   37  oc delete secrets secret-test
+   38  oc delete secrets secret-test02
+   39  oc create secret generic secret-test03 --from-file htpasswd 
+   40  oc get secret secret-test03 -o yaml 
+   41  ll
+   42  cp -rpv htpasswd htpasswd-filename-01  
+   43  ll
+   44  oc create secret generic secret-test04 --from-file htpasswd-filename-01 
+   45  oc get secret 
+   46  oc get secret secret-test04 -o yaml 
+   47  oc get secret 
+   48  oc delete secret secret-test03
+   49  oc delete secret secret-test04
+   50  oc create secret generic localusers --from-file htpasswd=htpasswd  -n openshift-config 
+   51  oc get secret localusers -n openshift-config
+   52  oc get secret localusers -n openshift-config -o yaml 
+   53  oc get secret localusers -n openshift-config -o jsonpath='{.data.passwd}'
+   54  oc get secret localusers -n openshift-config -o jsonpath='{.data.htpasswd}'
+   55  oc get secret localusers -n openshift-config -o jsonpath='{.data.htpasswd}' | base64 -d ; echo 
+   56  oc adm policy add-cluster-role-to-user cluster-admin new_admin 
+   57  oc get oauth 
+   58  oc get oauth cluster 
+   59  oc get oauth cluster  -o yaml > oauth.yaml 
+   60  ll
+   61  vim oauth.yaml 
+   62  oc apply -f oauth.yaml 
+   63  oc get oauth cluster -o yaml 
+   64  watch oc get pods
+   65  watch oc get pods -n openshift-authentication
+   66  cat htpasswd
+   67  oc login -u new_admin -p redhat https://api.ocp4.exampl.com:6443
+   68  oc login -u new_admin -p redhat https://api.ocp4.example.com:6443
+   69  oc get notes
+   70  oc get nodes
+   71  oc whoami 
+   72  oc login -u new_developer
+   73  oc login -u new_developer -p developer
+   74  pc whoami 
+   75  oc whoami 
+   76  oc project -q 
+   77  oc whoami 
+   78  oc login -u new_admin -p redhat https://api.ocp4.example.com:6443
+   79  oc get secret -n openshift-config 
+   80  oc extract secret/localusers --to=. -n openshift-config 
+   81  oc extract secret/localusers --to=. -n openshift-config --confirm
+   82  ll
+   83  cat htpasswd
+   84  htpasswd -b -B htpasswd  manager redhat
+   85  cat htpasswd
+   86  oc set data --help |less
+   87  # oc set data secret/foo password=this_is_secret
+   88  oc set data secret/localusers --from-file htpasswd=htpasswd -n openshift-config 
+   89  watch oc get pods -n openshift-authentication
+   90  cat htpasswd
+   91  oc login -u manager -p redhat 
+   92  oc new-project data
+   93  oc whoami 
+   94  oc extract secret/localusers --to=. -n openshift-config --confirm
+   95  oc whoami 
+   96  oc login -u new_admin -p redhat https://api.ocp4.example.com:6443
+   97  oc whoami 
+   98  htpasswd -D htpasswd manager 
+   99  ll
+  100  oc set data secret/localusers --from-file htpasswd=htpasswd -n openshift-config 
+  101  oc get user
+  102  oc delete user manager 
+  103  oc get identity 
+  104  oc delete identities.user.openshift.io myusers:manager
+  105  oc get identity 
+  106  lab finish auth-providers
+  107  pwd
+  108  cd
+  109   lab finish auth-providers
+  110  oc describe clusterrolebindings | grep self 
+  111  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443 
+  112  oc describe clusterrolebindings | grep self 
+  113  oc get clusterrolebindings 
+  114  oc get clusterrolebindings self-provisioner
+  115  oc describe clusterrolebindings self-provisioner
+  116  oc login -u developer -p developer https://api.ocp4.example.com:6443
+  117  oc whoami 
+  118  oc whoami -t 
+  119  oc new-project demo-01
+  120  oc project -q 
+  121  oc create namespace demo-02 
+  122  oc whoami --show-console 
+  123  oc explain group |less
+  124  oc project -q 
+  125  oc get all
+  126  oc new-app --name booking-app httpd
+  127  oc new-app --name booking-app httpd 
+  128  oc whoami 
+  129  oc get is -n openshift | grep httpd
+  130  oc get is -n openshift | grep nginx 
+  131  oc get is -n openshift | grep node
+  132  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+  133  oc get is -n openshift | grep nginx 
+  134  oc get is -n openshift 
+  135  oc get is -n openshift  | grep httpd
+  136  oc get is -n openshift  | grep nodejs
+  137  oc get is -n openshift  | grep ubi
+  138  oc get is -n openshift  | grep php
+  139  nslookup quay.io
+  140  oc get is -n openshift  | grep php
+  141  oc new-app --name booking-app php:8.0-ubi9
+  142  oc get pods
+  143  oc get svc 
+  144  oc get rs
+  145  oc get deployment 
+  146  oc edit deployment booking-app 
+  147  oc get pods
+  148  vim oauth.yaml 
+  149  mkdir mywork 
+  150  cd mywork/
+  151  pwd
+  152  touch htpasswd-booking-app 
+  153  touch htpasswd-payment-app 
+  154  for x in {51..60}; do htpasswd -B -b htpasswd-booking-app user$x redhat; done
+  155  for x in {61..70}; do htpasswd -B -b htpasswd-payment-app user$x redhat; done
+  156  ll
+  157  watch oc get pods -n openshift-authentication
+  158  oc get oauth -o yaml
+  159  oc whoami 
+  160  oc create namespace booking-app
+  161  oc create namespace payment-app
+  162  cat htpasswd-booking-app 
+  163  oc adm policy add-role-to-user admin user51 user52 user53 -n booking-app 
+  164  for x in {51..70}; do  oc login -u user$x -p redhat; done
+  165  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+  166  oc get users | grep -i payment 
+  167  oc get users | grep -i booking
+  168  oc whoami 
+  169  oc adm policy add-role-to-user edit user54 -n booking-app 
+  170  for x in {55..58}; do oc adm policy add-role-to-user edit user$x -n booking-app; done
+  171  oc adm policy add-role-to-user view user59 -n booking-app 
+  172  oc adm policy add-role-to-user view user60 -n booking-app 
+  173  oc describe clusterrolebindings self-provisioner
+  174  oc adm policy remove-cluster-role-from-group self-provisioner system:authenticated:oauth
+  175  oc describe clusterrolebindings self-provisioner
+  176  oc login -u user56 -p redhat 
+  177  oc project -q 
+  178  oc new-project demo10
+  179  oc whoami 
+  180  oc login -u admin -p redhatocp
+  181  oc policy add-role-to-user admin user61 -n payment-app 
+  182   oc adm policy who-can delete user
+  183  oc create serviceaccount app-sa 
+  184  oc adm policy add-cluster-role-to-user cluster-admin -z app-sa 
+  185  oc project -q 
+  186  oc project payment-app 
+  187  oc new-app --name myapp quay.io/cprakash2118/april-java-unzip-httpd-image-02
+  188  oc get pods
+  189  watch oc get pods
+  190  oc get pods
+  191  oc logs myapp-6654bc5db5-8x7bn
+  192  oc create serviceaccount app-sa 
+  193  oc get sc
+  194  oc get sa
+  195  oc adm policy add-scc-to-user anyuid -z app-sa 
+  196  oc describe rolebindings |less
+  197  oc describe clusterrolebindings |less
+  198  oc get pods
+  199  oc set serviceaccount deployment myapp app-sa 
+  200  oc get pods
+  201  oc edit deployment myapp 
+  202  oc adm groups new devops_grp 
+  203  oc get groups
+  204  oc adm groups add-users devops_grp user51
+  205  oc get groups
+  206  oc adm groups add-users devops_grp user52 user53 
+  207  oc get groups
+  208  oc get users
+  209  oc get users | grep booking 
+  210  oc get users | grep payment 
+  211  oc get groups 
+  212  oc describe clusterrolebindings |less
+  213  oc projects | grep booking 
+  214  oc projects | grep payment 
+  215  oc describe rolebindings |less
+  216  oc get users | grep booking 
+  217  oc whoami 
+  218  oc project payment-app 
+  219  oc describe rolebindings |less
+  220  oc project -q 
+  221  oc project booking-app 
+  222  oc describe rolebindings |less
+  223  oc login -u user51 -p redhat
+  224  oc project -q 
+  225  oc whoami 
+  226  oc describe rolebindings |less
+  227  oc login -u user555 -p redhat
+  228  oc login -u user55 -p redhat
+  229  oc whoami 
+  230  oc describe rolebindings |less
+  231  oc login -u user51 -p redhat
+  232  oc whoami 
+  233  oc describe rolebindings |less
+  234  oc project -q
+  235  oc whoami 
+  236  oc login -u user55 -p redhat
+  237  oc login -u user51 -p redhat
+  238  oc describe rolebindings |less
+  239  oc login -u user60 -p redhat
+  240  oc whoami 
+  241  oc new-app --name test01 quay.io/cprakash2118/april-java-unzip-httpd-image-02
+  242  oc get is 
+  243  oc login -u user57 -p redhat
+  244  oc get all
+  245  oc new-app --name test01 quay.io/cprakash2118/april-java-unzip-httpd-image-02
+  246  oc edit deployment test01 
+  247  oc login -u user59 -p redhat
+  248  oc get pods
+  249  oc edit deployment test01 
+  250  oc login -u user56 -p redhat
+  251  oc get pods
+  252  oc whaomi
+  253  oc whoami 
+  254  oc create serviceaccount myapp-sa 
+  255  oc get sa myapp-sa 
+  256  oc project -q 
+  257  oc adm policy add-scc-to-user anyuid -z myapp-sa 
+  258  oc policy add-scc-to-user anyuid -z myapp-sa 
+  259  oc login -u user51 -p redhat
+  260  oc policy add-scc-to-user anyuid -z myapp-sa 
+  261  oc adm policy add-scc-to-user anyuid -z myapp-sa 
+  262  oc login -u admin -p redhatocp
+  263  oc adm policy add-scc-to-user anyuid -z myapp-sa 
+  264  oc login -u user51 -p redhat
+  265  oc login -u user56 -p redhat
+  266  oc get pods
+  267  oc whoami 
+  268  oc set serviceaccount deployment test01 myapp-sa 
+  269  oc whoami 
+  270  oc get pods
+  271  oc get deployment test01 
+  272  oc get deployment test01 -o yaml 
+  273  oc get deployment test01 -o yaml | grep -i service
+  274  oc woami 
+  275  oc whoami 
+  276  cd
+  277   lab start auth-rbac
+  278  oc whoami 
+  279  oc describe clusterrolebindings | grep self 
+  280  oc describe clusterrolebindings self-provisioner
+  281  oc login -u user66 -p redhat
+  282  oc whoami 
+  283  oc project -q 
+  284  oc get all
+  285  oc whoami 
+  286  oc new-project demo01 
+  287  oc project -q
+  288  oc create namespace ddmo02 
+  289  oc new-project demo02
+  290  oc project -q 
+  291  oc describe clusterrolebindings self-provisioner
+  292  oc whoami 
+  293  oc login -u admin -p redhatocp
+  294  oc whoami 
+  295  oc describe clusterrolebindings self-provisioner
+  296  oc whoami
+  297  oc adm policy remove-cluster-role-from-group system:authenticated:oauth
+  298  oc adm policy remove-cluster-role-from-group self-provisioner  system:authenticated:oauth
+  299  oc whoami
+  300  oc describe clusterrolebindings self-provisioner
+  301  oc get groups
+  302  #oc adm policy remove-cluster-role-from-group self-provisioner  system:authenticated:oauth
+  303  oc adm policy add-cluster-role-to-user self-provisioner  user51
+  304  oc describe clusterrolebindings self-provisioner
+  305  oc adm policy add-cluster-role-to-user self-provisioner  devops_grp
+  306  oc adm policy add-cluster-role-to-group self-provisioner  devops_grp
+  307  oc describe clusterrolebindings self-provisioner
+  308  oc adm policy add-cluster-role-to-group self-provisioner  devops_grp
+  309  oc describe clusterrolebindings self-provisioner
+  310  oc describe clusterrolebindings self-provisioners
+  311  oc describe clusterrolebindings self-provisioner
+  312  oc adm policy remove-cluster-role-from-user self-provisioner user51
+  313  oc adm policy add-cluster-role-to-group self-provisioner  devops_grp
+  314  oc describe clusterrolebindings self-provisioners
+  315  oc describe clusterrolebindings self-provisioner
+  316   oc get clusterrolebinding -o wide
+  317   oc get clusterrolebinding -o wide | grep self 
+  318   oc get clusterrolebinding -o wide | grep self-provisioner 
+  319   oc login -u leader -p redhat
+  320  oc new-project demo01 
+  321  oc whoami 
+  322  oc login -u admin -p redhatocp
+  323  oc whoami 
+  324  oc describe clusterrolebindings self-provisioner
+  325  oc adm policy remove-cluster-role-from-group self-provisioner    devops_grp
+  326  oc describe clusterrolebindings self-provisioner
+  327  oc adm policy remove-cluster-role-from-user self-provisioner    devops_grp
+  328  oc policy add-role-to-user admin leader
+  329  oc describe clusterrolebindings self-provisioner
+  330  oc whoami 
+  331   oc new-project auth-rbac
+  332  oc project -q 
+  333  oc policy add-role-to-user admin leader
+  334   oc adm groups new dev-group
+  335   oc adm groups add-users dev-group developer
+  336  oc wahomi
+  337  oc whoami 
+  338  oc groups 
+  339  oc get groups
+  340  oc adm groups new qa-group
+  341  oc get groups
+  342  oc get groups ; head -1 ; oc get groups "-group"
+  343  oc get groups | head -1 ; oc get groups "-group"
+  344  oc get groups | head -1 ; oc get groups "\-group"
+  345  oc get groups.user.openshift.io 
+  346  oc get groups.user.openshift.io | head -1 
+  347  oc get groups.user.openshift.io | head -1 ; oc get groups | grep "-group"
+  348  oc get groups.user.openshift.io | head -1 ; oc get groups | grep "\-group"
+  349  oc get users 
+  350  oc get users  | grep qa
+  351  oc get users  
+  352  oc login -u qa-engineer -p redhat 
+  353  oc project -q 
+  354  oc whoami 
+  355  oc get images | grep htpasswd
+  356  oc whoami 
+  357  oc get is -n openshift | grep httpd
+  358  oc login -u qa-engineer -p redhat 
+  359  oc login -u admin -p redhatocp
+  360  oc get nodes
+  361  oc version 
+  362  oc whoami 
+  363  oc get secret kubeconfig -n kube-system 
+  364  oc get secret kubeadmin  -n kube-system 
+  365  oc get secret kubeadmin  -n kube-system -o yaml > kubeadmin-secret.yaml 
+  366  vim kubeadmin-secret.yaml 
+  367  oc apply -f kubeadmin-secret.yaml --dry-run=server --validate 
+  368  sleep 80 ; echo will start in 1,2 mins 
+  369  mkdir work 
+  370  cd work/
+  371  pwd
+  372  ll
+  373  git clone https://github.com/cprakash2118/DO280-hpe
+  374  oc explain pod |less
+  375  oc explain pod.spec |less
+  376  cd DO280-hpe/
+  377  ll
+  378  vim pod.yaml 
+  379  oc new-project demo01 
+  380  oc project -q 
+  381  oc project demo01 
+  382  oc get pods
+  383  oc apply -f pod.yaml 
+  384  oc get pods
+  385  oc get is -n openshift
+  386  oc get is -n openshift | grep httpd
+  387  oc get is -n openshift | grep http
+  388  ll
+  389  oc get pods
+  390  oc get svc
+  391  oc get deployment 
+  392  oc get is -n openshift | grep php
+  393  oc get pods example-pod 
+  394  oc edit pods example-pod 
+  395  oc delete -f pod.yaml 
+  396  oc get istag -n openshift | grep php
+  397  vim -O replicaset.yaml pod.yaml 
+  398  oc explain replicaset |less
+  399  oc explain pvc|less
+  400  oc explain pv|less
+  401  oc explain replicaset |less
+  402  oc apply -f replicaset.yaml 
+  403  oc get pods
+  404  oc delete -f replicaset.yaml 
+  405  vim -O deployment.yaml replicaset.yaml 
+  406  :q
+  407  vim -O replicaset.yaml pod.yaml 
+  408  oc explain replicaset |less
+  409  oc explain replicaset.spec |less
+  410  oc explain replicaset.spec.selector |less
+  411  oc new-project --name ns-demo01 
+  412  oc new-project ns-demo01 --dry-run=client -o yaml 
+  413  oc create namespace demo01 
+  414  oc create namespace demo02 --dry-run=client -o yaml > demo02.yaml 
+  415  vim demo02.yaml 
+  416  oc create deployment --image httpd --dry-run=client -o yaml >  mybooking.yaml 
+  417  oc create deployment my-deployment-name --image httpd --dry-run=client -o yaml >  mybooking.yaml 
+  418  vim mybooking.yaml 
+  419  oc create service  vim mybooking.yaml 
+  420  vim mybooking.yaml
+  421  oc apply -f mybooking.yaml --dry-run=server --validate 
+  422  vim mybooking.yaml
+  423  oc apply -f mybooking.yaml --dry-run=server --validate 
+  424  cd
+  425   lab start declarative-manifests
+  426  oc login -u developer -p developer https://api.ocp4.example.com:6443 
+  427  oc whoami 
+  428  cd DO280/labs/declarative-manifests/
+  429  pwd
+  430  ll
+  431   oc new-project declarative-manifests
+  432  oc project -q 
+  433  oc get all
+  434  oc project -qn
+  435  oc project -q
+  436  pwd
+  437  ls -l
+  438  git clone https://git.ocp4.example.com/developer/declarative-manifests.git
+  439  tree
+  440  cd declarative-manifests/
+  441  pwd
+  442  ll
+  443  vim database.yaml 
+  444  cat database.yaml | grep kind 
+  445  cat exoplanets.yaml | grep kind 
+  446  git log --oneline 
+  447   git checkout v1.0
+  448  git branch 
+  449  git log --oneline 
+  450  ls -l 
+  451  tree
+  452  oc apply -f .
+  453  oc get pods
+  454  oc get svc 
+  455  oc get route 
+  456  oc get secret 
+  457  oc get cm 
+  458  oc get pods
+  459  oc get route 
+  460  git log --oneline 
+  461  oc get pods
+  462  git branch 
+  463  git checkout v1.1.0
+  464  git branch 
+  465  oc apply -f . --dry-run=client --validate 
+  466  oc diff -f .
+  467  ll
+  468  git branch 
+  469  cat * | grep image 
+  470  git checkout v1.0 
+  471  git branch 
+  472  cat * | grep image 
+  473  git checkout v1.1.0
+  474  cat * | grep image 
+  475  git status 
+  476  git branch 
+  477  git --help |less
+  478  git show
+  479  oc diff -f .
+  480  oc get pods
+  481  oc apply -f . --dry-run=client --validate 
+  482  oc apply -f . 
+  483  oc get pods
+  484  oc diff -f .
+  485  git show
+  486  oc diff -f .
+  487  git branch 
+  488  oc get pods
+  489  git checkout v1.1.1
+  490  git branch 
+  491  git show
+  492  oc diff -f .
+  493  git log --oneline 
+  494  git checkout v1.1.0
+  495  git log --oneline 
+  496  git checkout v1.1.1
+  497  git log --oneline 
+  498  oc diff -f .
+  499  git branch 
+  500  oc apply -f . --dry-run=server --validate 
+  501  vim database.yaml 
+  502  oc apply -f . --dry-run=server --validate
+  503  vim database.yaml 
+  504  oc apply -f . --dry-run=server --validate
+  505  oc apply -f . 
+  506  oc get pods
+  507  oc logs exoplanets-8465f656c6-tdk2p
+  508  oc rollout restart deployment exoplanets
+  509  oc rollout restart deployment database 
+  510  oc get pods
+  511  ll
+  512  vim exoplanets.yaml 
+  513  cat exoplanets.yaml | grep kind
+  514  oc get pods
+  515  oc rsh database-7cf7466d46-jp5g4
+  516  git branch 
+  517  git checkout v1.1.0
+  518  git branch 
+  519  oc apply -f .
+  520  oc get pods
+  521  oc rsh database-7cf7466d46-jp5g4
+  522  oc get pods
+  523  oc logs exoplanets-5d7675776d-zkxpr
+  524  git checkout v1.1.1 
+  525  git branch 
+  526  oc apply -f .
+  527  oc get pods
+  528  oc rsh exoplanets-58b87f8445-m6qvf
+  529  ll
+  530  vim database.yaml 
+  531  #oc create deployment my-deployment-name --image httpd --dry-run=client -o yaml >  mybooking.yaml 
+  532  oc create service my-service --
+  533  oc get pods
+  534  oc expose pod exoplanets-58b87f8445-m6qvf --type LoadBalancer --port 22 --dry-run=client -o yaml > my-service.yaml 
+  535  vim my-service.yaml 
+  536  oc expose pod exoplanets-58b87f8445-m6qvf --type LoadBalancer --port 22 --dry-run=client -o yaml --selector name=cp  > my-service.yaml 
+  537  vim my-service.yaml 
+  538  oc expose service --name database --hostname cp.apps.ocp4.example.com --dry-run=client -o yaml > route-example.yaml 
+  539  oc expose service database --hostname cp.apps.ocp4.example.com --dry-run=client -o yaml > route-example.yaml 
+  540  vim route-example.yaml 
+  541  ll
+  542  mv my-service.yaml route-example.yaml ~/
+  543  ll
+  544  cd 
+  545  cd DO280/
+  546  ll
+  547  cd
+  548  ll
+  549  cd work/
+  550  pwd
+  551  ll
+  552  cd DO280-hpe/
+  553  ll
+  554  tree
+  555  l
+  556  ll
+  557  mkdir ~/use-cases
+  558  cp -rpv *.yaml ~/use-cases/
+  559  cp -rpv manifest-useCases ~/use-cases/
+  560  cd
+  561  ll
+  562  cp -rpv *.yaml use-cases/
+  563  cd  use-cases/
+  564  ll
+  565  history > histtory-30-May-2026

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: exoplanets
+    pod-template-hash: 58b87f8445
+  name: exoplanets-58b87f8445-m6qvf
+spec:
+  ports:
+  - port: 22
+    protocol: TCP
+    targetPort: 22
+  selector:
+    name: cp
+  type: LoadBalancer
+status:
+  loadBalancer: {}
